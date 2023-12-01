@@ -3,6 +3,8 @@
 // Ruby Utils
 
 class RubyUtils {
+  ipCache = {};
+
   getInfo() {
     return {
       id: 'rubyutils',
@@ -95,11 +97,24 @@ class RubyUtils {
 
   generateFakeIP(args) {
     const name = args.NAME.toLowerCase().replace(/\s/g, ''); // Convert name to lowercase and remove spaces
-    // Generate random numbers for the second and third octets
+
+    // Check if the fake IP for this name is already cached
+    if (this.ipCache[name]) {
+      return this.ipCache[name];
+    }
+
+    // Generate random numbers for each octet
+    const firstOctet = Math.floor(Math.random() * 256);
     const secondOctet = Math.floor(Math.random() * 256);
     const thirdOctet = Math.floor(Math.random() * 256);
-    // Construct the fake IP with fixed first octet and random second and third octets
-    const fakeIP = `192.${secondOctet}.${thirdOctet}.${name.charCodeAt(0) % 256}`;
+    const fourthOctet = name.charCodeAt(0) % 256;
+
+    // Construct the fake IP
+    const fakeIP = `${firstOctet}.${secondOctet}.${thirdOctet}.${fourthOctet}`;
+
+    // Cache the fake IP for future use
+    this.ipCache[name] = fakeIP;
+
     return fakeIP;
   }
 }
