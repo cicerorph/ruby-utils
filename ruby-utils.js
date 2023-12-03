@@ -63,6 +63,11 @@ class RubyUtils {
           blockType: Scratch.BlockType.COMMAND,
         },
         {
+          opcode: "getfps",
+          blockType: Scratch.BlockType.REPORTER,
+          text: "fps",
+        },
+        {
           blockType: Scratch.BlockType.LABEL,
           text: 'Discord Webhook Section'
         },
@@ -222,7 +227,7 @@ class RubyUtils {
 
   preRenderCostumes() {
     // Get the current sprite from the runtime
-    const currentSprite = this.runtime.targets[0];
+    const currentSprite = vm.runtime.targets[0];
   
     // Check if the sprite exists and has costumes
     if (currentSprite && currentSprite.sprite && currentSprite.sprite.costumes) {
@@ -241,6 +246,10 @@ class RubyUtils {
     } else {
       console.error('Error: Unable to pre-render costumes. Sprite or costumes not found.');
     }
+  }
+
+  getfps() {
+    return fps;
   }
 
   // New functions for setting individual embed properties
