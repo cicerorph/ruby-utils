@@ -8,9 +8,9 @@ class RubyUtils {
     return {
       id: 'rubyutils',
       name: 'Ruby Utils',
-      color1: "#b32ffa",
-      color2: "#b32ffa",
-      color3: "#b32ffa",
+      color1: "#FF5733",
+      color2: "#FF5733",
+      color3: "#FF5733",
       blocks: [
         {
           opcode: 'wait',
