@@ -287,7 +287,7 @@ class RubyUtils {
     const webhookUrl = args.WEBHOOK;
     const payload = {
       embeds: [embed],
-      name: [name.name],
+      username: name.name,
     };
 
     return fetch(webhookUrl, {
