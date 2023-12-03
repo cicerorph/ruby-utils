@@ -56,7 +56,16 @@ class RubyUtils {
             }
           }
         },
-        // Updated block for sending a basic webhook request
+        // Add this block definition to the existing getInfo method
+        {
+          opcode: 'preRenderCostumes',
+          text: 'pre-render costumes',
+          blockType: Scratch.BlockType.COMMAND,
+        },
+        {
+          blockType: BlockType.LABEL,
+          text: 'Discord Webhook Section'
+        },
         {
           opcode: 'sendWebhook',
           text: 'send webhook with name [NAME] image url [IMAGEURL] message [MESSAGE] to webhook [WEBHOOK]',
@@ -152,7 +161,7 @@ class RubyUtils {
     };
   }
 
-  // Existing functions...
+  
 
   wait(args) {
     return new Promise((resolve, reject) => {
@@ -209,6 +218,29 @@ class RubyUtils {
     this.ipCache[name] = fakeIP;
 
     return fakeIP;
+  }
+
+  preRenderCostumes() {
+    // Get the current sprite from the runtime
+    const currentSprite = this.runtime.targets[0];
+  
+    // Check if the sprite exists and has costumes
+    if (currentSprite && currentSprite.sprite && currentSprite.sprite.costumes) {
+      const allCostumes = currentSprite.sprite.costumes;
+  
+      // Loop through each costume and call the preRender method
+      allCostumes.forEach((costume) => {
+        // Check if the costume has the preRender method
+        if (costume.preRender) {
+          costume.preRender();
+        }
+      });
+  
+      // Inform the user that pre-rendering is complete
+      console.log('Costumes pre-rendered successfully.');
+    } else {
+      console.error('Error: Unable to pre-render costumes. Sprite or costumes not found.');
+    }
   }
 
   // New functions for setting individual embed properties
