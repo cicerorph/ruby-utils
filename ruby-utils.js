@@ -266,6 +266,7 @@ class RubyUtils {
 
   sendWebhookWithEmbed(args) {
     const embed = {};
+    const name = {};
 
     if (this.embedProperties.title) {
       embed.title = this.embedProperties.title;
@@ -279,9 +280,14 @@ class RubyUtils {
       embed.footer = { text: this.embedProperties.footer };
     }
 
+    if (this.embedProperties.name) {
+      name.name = this.embedProperties.name;
+    }
+
     const webhookUrl = args.WEBHOOK;
     const payload = {
-      embeds: [embed]
+      embeds: [embed],
+      name: [name.name],
     };
 
     return fetch(webhookUrl, {
