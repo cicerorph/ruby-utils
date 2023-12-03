@@ -63,7 +63,7 @@ class RubyUtils {
           blockType: Scratch.BlockType.COMMAND,
         },
         {
-          blockType: BlockType.LABEL,
+          blockType: Scratch.BlockType.LABEL,
           text: 'Discord Webhook Section'
         },
         {
