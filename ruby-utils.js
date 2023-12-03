@@ -1,9 +1,8 @@
-// Created by MubiLop with some ideas from other people
-
 // Ruby Utils
 
 class RubyUtils {
   ipCache = {};
+  embedProperties = {};
 
   getInfo() {
     return {
@@ -56,10 +55,104 @@ class RubyUtils {
               defaultValue: 'user'
             }
           }
+        },
+        // Updated block for sending a basic webhook request
+        {
+          opcode: 'sendWebhook',
+          text: 'send webhook with name [NAME] image url [IMAGEURL] message [MESSAGE] to webhook [WEBHOOK]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'user'
+            },
+            IMAGEURL: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'https://example.com/image.jpg'
+            },
+            MESSAGE: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Hello, world!'
+            },
+            WEBHOOK: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'https://your.webhook.url'
+            }
+          }
+        },
+        // New blocks for setting a hex color and name
+        {
+          opcode: 'setHexColor',
+          text: 'set hex color to [COLOR]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            COLOR: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: '#000000'
+            }
+          }
+        },
+        {
+          opcode: 'setName',
+          text: 'set name to [NAME]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            NAME: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Ruby Utils'
+            }
+          }
+        },
+        // New blocks for sending a webhook with embeds with optional inputs
+        {
+          opcode: 'setTitle',
+          text: 'set embed title to [TITLE]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            TITLE: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Title'
+            }
+          }
+        },
+        {
+          opcode: 'setDescription',
+          text: 'set embed description to [DESCRIPTION]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            DESCRIPTION: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Description'
+            }
+          }
+        },
+        {
+          opcode: 'setFooter',
+          text: 'set embed footer to [FOOTER]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            FOOTER: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'Footer'
+            }
+          }
+        },
+        {
+          opcode: 'sendWebhookWithEmbed',
+          text: 'send webhook with embeds to webhook [WEBHOOK]',
+          blockType: Scratch.BlockType.COMMAND,
+          arguments: {
+            WEBHOOK: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'https://your.webhook.url'
+            }
+          }
         }
       ]
     };
   }
+
+  // Existing functions...
 
   wait(args) {
     return new Promise((resolve, reject) => {
@@ -116,6 +209,99 @@ class RubyUtils {
     this.ipCache[name] = fakeIP;
 
     return fakeIP;
+  }
+
+  // New functions for setting individual embed properties
+  setTitle(args) {
+    this.embedProperties.title = args.TITLE;
+  }
+
+  setDescription(args) {
+    this.embedProperties.description = args.DESCRIPTION;
+  }
+
+  setFooter(args) {
+    this.embedProperties.footer = args.FOOTER;
+  }
+
+  setHexColor(args) {
+    this.embedProperties.hexColor = args.COLOR;
+  }
+
+  setName(args) {
+    this.embedProperties.name = args.NAME;
+  }
+
+  sendWebhook(args) {
+    const name = args.NAME;
+    const imageUrl = args.IMAGEURL;
+    const message = args.MESSAGE;
+    const webhookUrl = args.WEBHOOK;
+
+    const payload = {
+      username: name,
+      avatar_url: imageUrl,
+      content: message
+    };
+
+    return fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.error('Webhook request failed:', response.statusText);
+        return 'Webhook request failed';
+      }
+      return 'Webhook sent successfully';
+    })
+    .catch(error => {
+      console.error('Error sending webhook:', error);
+      return 'Error sending webhook';
+    });
+  }
+
+  sendWebhookWithEmbed(args) {
+    const embed = {};
+
+    if (this.embedProperties.title) {
+      embed.title = this.embedProperties.title;
+    }
+
+    if (this.embedProperties.description) {
+      embed.description = this.embedProperties.description;
+    }
+
+    if (this.embedProperties.footer) {
+      embed.footer = { text: this.embedProperties.footer };
+    }
+
+    const webhookUrl = args.WEBHOOK;
+    const payload = {
+      embeds: [embed]
+    };
+
+    return fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.error('Webhook request with embeds failed:', response.statusText);
+        return 'Webhook request with embeds failed';
+      }
+      return 'Webhook with embeds sent successfully';
+    })
+    .catch(error => {
+      console.error('Error sending webhook with embeds:', error);
+      return 'Error sending webhook with embeds';
+    });
   }
 }
 
